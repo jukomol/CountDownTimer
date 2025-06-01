@@ -1,307 +1,391 @@
+/* ================================================================
+   style.css – Main stylesheet for Timer App
+   ================================================================ */
 
-
-html {
-    font-size: 1em;
-    line-height: 1.4;
+/* ------------------------------
+   Reset & Base Styles
+------------------------------ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-html,
 body {
-    height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f2f2f2;
+  color: #222;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    background: #000;
+header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #ffffff;
+  border-bottom: 2px solid #ccc;
 }
 
+header h1 {
+  font-size: 2rem;
+}
+
+#title {
+  position: absolute;
+  color: #be002a;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  pointer-events: none;
+}
+
+#darkToggle {
+  font-size: 1.5rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #eee;
+}
+
+body.dark header {
+  background: #1e1e1e;
+  border-color: #444;
+}
+
+body.dark #darkToggle {
+  color: #ffd700;
+}
+
+#controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1rem;
+  flex-wrap: wrap;
+}
+
+#controls label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+#controls input[type="number"] {
+  width: 60px;
+  padding: 0.4rem;
+  font-size: 1rem;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid #999;
+}
+
+#controls button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  background-color: #be002a;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#controls button:hover {
+  background-color: #990021;
+}
+
+#countDown {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 2rem auto 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+}
 
 #deadline {
-    width:581px;
-    max-width: 100%;
-    height:158px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 1;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+  position: relative;
+  text-align: center;
 }
 
 #deadline svg {
-    width: 100%;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  display: block;
 }
 
-#progress-time-fill {
-    animation-name: progress-fill; 
-    animation-timing-function: linear; 
-    animation-iteration-count: infinite;
-}
-
-/* Death */
 #death-group {
-    animation-name: walk;
-    animation-timing-function: ease; 
-    animation-iteration-count: infinite;
-    transform: translateX(0);
+  visibility: visible;
+  display: block;
+  transform: translateX(100px);
+  transition: transform 1s linear;
+  will-change: transform;
 }
 
 #death-arm {
-    animation: move-arm 3s ease infinite;
-    /* transform-origin: left center; */
-    transform-origin: -60px 74px;
+  transform-origin: top right;
+  animation: swingArm 1s infinite ease-in-out;
 }
 
-#death-tool {
-    animation: move-tool 3s ease infinite;
-    transform-origin: -48px center;
+@keyframes swingArm {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
 }
-
-/* Designer */
 
 #designer-arm-grop {
-    animation: write 1.5s ease infinite;
-    transform: translate(0, 0) rotate(0deg) scale(1, 1);
-    transform-origin: 90% top;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
+
+.paused * {
+  animation-play-state: paused !important;
+  transition: none !important;
 }
 
 .deadline-days {
-    color: #fff;
-    text-align: center;
-    width: 100px;
-    margin: 0 auto;
-    position: relative;
-    height: 20px;
-    font-family: 'Oswald', sans-serif;
-}
-
-.deadline-days .inner {
-    width: 100px;
-    position: relative;
-    top: 0;
-    left: 0;
+  position: relative;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  color: #be002a;
 }
 
 .mask-red,
 .mask-white {
-    position: absolute;
-    top: 0;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.mask-red .inner,
+.mask-white .inner {
+  animation: slideText 6s linear infinite;
+  white-space: nowrap;
+}
+
+.mask-red .inner {
+  color: #be002a;
+}
+
+.mask-white .inner {
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+
+@keyframes slideText {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+#timer-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+#timer-buttons button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  background-color: #be002a;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#timer-buttons button:hover {
+  background-color: #990021;
+}
+
+#task-panel {
+  position: absolute;
+  top: 120px;
+  right: 2rem;
+  width: 250px;
+  padding: 1rem;
+  background-color: #fff;
+  border-left: 2px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+body.dark #task-panel {
+  background-color: #1e1e1e;
+  color: #eee;
+  border-color: #444;
+}
+
+#task-panel h2 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+#task-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+#task-form input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.4rem;
+  font-size: 0.9rem;
+}
+
+#task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+#task-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+#task-list input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+#task-list li.completed label {
+  opacity: 0.4;
+  text-decoration: line-through;
+  transition: opacity 0.3s ease;
+}
+
+#task-list button.delete-btn {
+  margin-left: auto;
+  background: none;
+  color: #be002a;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+#addTaskBtn,
+#clearTasksBtn,
+#exportTasksBtn {
+  padding: 0.4rem 0.6rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+#addTaskBtn {
+  background-color: #be002a;
+  color: #fff;
+}
+
+#addTaskBtn:hover {
+  background-color: #990021;
+}
+
+#clearTasksBtn {
+  background-color: #444;
+  color: #fff;
+}
+
+#clearTasksBtn:hover {
+  background-color: #222;
+}
+
+#exportTasksBtn {
+  background-color: #007bff;
+  color: #fff;
+}
+
+#exportTasksBtn:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  #controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #task-panel {
+    position: static;
     width: 100%;
-    overflow: hidden;
-    height: 100%;
+    margin-top: 1rem;
+  }
+
+  #task-panel h2 {
+    text-align: center;
+  }
+
+  #task-form {
+    flex-direction: column;
+  }
+
+  #task-list li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #timer-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
 
-.mask-red {
-    left: 0;
-    width: 0;
-    color: #BE002A;
-    animation: text-red 20s ease infinite;
-    z-index: 2;
-    background: #000;
-}
-.mask-white {
-    right: 0;
-}
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
 
-/* Flames */
+  #controls input[type="number"] {
+    width: 50px;
+  }
 
-#red-flame {
-    opacity: 0;
-    animation: show-flames 20s ease infinite, red-flame 120ms ease infinite;
-    transform-origin: center bottom;
-}
+  #countDown {
+    font-size: 1.5rem;
+  }
 
-#yellow-flame {
-    opacity: 0;
-    animation: show-flames 20s ease infinite, yellow-flame 120ms ease infinite;
-    transform-origin: center bottom;
-}
+  #task-panel {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
 
-#white-flame {
-    opacity: 0;
-    animation: show-flames 20s ease infinite, red-flame 100ms ease infinite;
-    transform-origin: center bottom;
-}
+  #task-panel h2 {
+    font-size: 1rem;
+  }
 
-@keyframes progress-fill {
-    0% {
-        x: -100%;
-    }
-
-    100% {
-        x: -3%;
-    }
-}
-
-@keyframes walk {
-    0% {
-        transform: translateX(0);
-    }
-    6% {
-        transform: translateX(0);
-    }
-    10% {
-        transform: translateX(100px);
-    }
-
-    15% {
-        transform: translateX(140px);
-    }
-
-    25% {
-        transform: translateX(170px);
-    }
-
-    35% {
-        transform: translateX(220px);
-    }
-
-    45% {
-        transform: translateX(280px);
-    }
-
-    55% {
-        transform: translateX(340px);
-    }
-
-    65% {
-        transform: translateX(370px);
-    }
-
-    75% {
-        transform: translateX(430px);
-    }
-
-    85% {
-        transform: translateX(460px);
-    }
-
-    100% {
-        transform: translateX(520px);
-    }
-}
-
-@keyframes move-arm {
-    0% {
-        transform: rotate(0);
-    }
-
-    5% {
-        transform: rotate(0);
-    }
-
-    9% {
-        transform: rotate(40deg);
-    }
-
-    80% {
-        transform: rotate(0);
-    }
-}
-
-@keyframes move-tool {
-    0% {
-        transform: rotate(0);
-    }
-
-    5% {
-        transform: rotate(0);
-    }
-
-    9% {
-        transform: rotate(50deg);
-    }
-
-    80% {
-        transform: rotate(0);
-    }
-}
-
-/* Design animations */
-
-@keyframes write {
-    0% {
-        transform: translate(0, 0) rotate(0deg) scale(1, 1);
-    }
-
-    16% {
-        transform: translate(0px, 0px) rotate(5deg) scale(0.8, 1);
-    }
-
-    32% {
-        transform: translate(0px, 0px) rotate(0deg) scale(1, 1);
-    }
-
-    48% {
-        transform: translate(0px, 0px) rotate(6deg) scale(0.8, 1);
-    }
-
-    65% {
-        transform: translate(0px, 0px) rotate(0deg) scale(1, 1);
-    }
-
-    83% {
-        transform: translate(0px, 0px) rotate(4deg) scale(0.8, 1);
-    }
-}
-
-@keyframes text-red {
-    0% {
-        width: 0%;
-    }
-
-    100% {
-        width: 98%;
-    }
-}
-
-@keyframes show-flames {
-    0% {
-        opacity: 0;
-    }
-    74% {
-        opacity: 0;
-    }
-    80% {
-        opacity: 1;
-    }
-    99% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes red-flame {
-    0% {
-        transform: translateY(-30px) scale(1, 1);
-    }
-
-    25% {
-        transform: translateY(-30px) scale(1.1, 1.1);
-    }
-
-    75% {
-        transform: translateY(-30px) scale(0.8, 0.7); 
-    }
-
-    100% {
-        transform: translateY(-30px) scale(1, 1); 
-    }
-}
-
-@keyframes yellow-flame {
-    0% {
-        transform: translateY(-30px) scale(0.8, 0.7);
-    }
-
-    50% {
-        transform: translateY(-30px) scale(1.1, 1.2);
-    }
-
-    100% {
-        transform: translateY(-30px) scale(1, 1);
-    }
+  #task-form input {
+    font-size: 0.85rem;
+  }
 }
