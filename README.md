@@ -4,7 +4,7 @@
 
 > Use this app in fullscreen browser mode during your work/study sessions for distraction-free productivity.
 
-Live: https://jukomol.github.io/WORK-MODE-TIMER/
+Live: https://jukomol.github.io/CountDownTimer/
 
 
 ## 🔧 Features
@@ -42,7 +42,7 @@ Live: https://jukomol.github.io/WORK-MODE-TIMER/
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/jukomol/WORK-MODE-TIMER
+   git clone https://github.com/jukomol/CountDownTimer
    cd WORK-MODE-TIMER
    ```
 
