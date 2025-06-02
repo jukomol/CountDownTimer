@@ -6,6 +6,9 @@
 
 Live: https://jukomol.github.io/CountDownTimer/
 
+![image](https://github.com/user-attachments/assets/13dbdd7c-8d17-42d0-9fcc-abef9c8191a5)
+
+
 
 ## 🔧 Features
 
