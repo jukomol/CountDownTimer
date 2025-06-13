@@ -46,7 +46,7 @@ Live: https://jukomol.github.io/CountDownTimer/
 
    ```bash
    git clone https://github.com/jukomol/CountDownTimer
-   cd WORK-MODE-TIMER
+   cd CountDownTimer
    ```
 
 2. Open `index.html` in your browser.
