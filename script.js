@@ -9,8 +9,6 @@
      the red rectangle #progress-time-fill exactly in sync
    ================================================================*/
 
-var $ = jQuery;
-
 let total = 0;
 let remaining = 0;
 let initialSet = 0;
@@ -33,27 +31,47 @@ const ANIMATION_CYCLE    = 20;    // seconds per “deadline” character loop
 /* ==================================================================
    1) CHARACTER / TEXT FX (runs once DOM is ready)
    =================================================================*/
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
 
   /* — set CSS‑keyframe speed for the reaper tool & flames group — */
-  $('#death-group').css({ 'animation-duration': ANIMATION_CYCLE + 's' });
+  const deathGroup = document.getElementById('death-group');
+  if (deathGroup) {
+    deathGroup.style.animationDuration = ANIMATION_CYCLE + 's';
+  }
 
   /* — pulse the designer’s arm faster as the (fake) deadline nears — */
   function deadlineAnimation() {
-    $(ARM_ID).css({ 'animation-duration': '1.5s' });
-    setTimeout(() => $(ARM_ID).css({ 'animation-duration': '1s'  }),  4000);
-    setTimeout(() => $(ARM_ID).css({ 'animation-duration': '0.7s'}),  8000);
-    setTimeout(() => $(ARM_ID).css({ 'animation-duration': '0.3s'}), 12000);
-    setTimeout(() => $(ARM_ID).css({ 'animation-duration': '0.2s'}), 15000);
+    const armElement = document.querySelector(ARM_ID);
+    if (armElement) {
+      armElement.style.animationDuration = '1.5s';
+    }
+    setTimeout(() => {
+      const armElement = document.querySelector(ARM_ID);
+      if (armElement) armElement.style.animationDuration = '1s';
+    },  4000);
+    setTimeout(() => {
+      const armElement = document.querySelector(ARM_ID);
+      if (armElement) armElement.style.animationDuration = '0.7s';
+    },  8000);
+    setTimeout(() => {
+      const armElement = document.querySelector(ARM_ID);
+      if (armElement) armElement.style.animationDuration = '0.3s';
+    }, 12000);
+    setTimeout(() => {
+      const armElement = document.querySelector(ARM_ID);
+      if (armElement) armElement.style.animationDuration = '0.2s';
+    }, 15000);
   }
 
   /* — duplicate the “Deadline for …” label inside two sliding masks — */
   function wireDeadlineText() {
-    const $el  = $('.deadline-days');
-    const html = `
-      <div class="mask-red"><div class="inner">${$el.html()}</div></div>
-      <div class="mask-white"><div class="inner">${$el.html()}</div></div>`;
-    $el.html(html);
+    const el = document.querySelector('.deadline-days');
+    if (el) {
+      const html = `
+        <div class="mask-red"><div class="inner">${el.innerHTML}</div></div>
+        <div class="mask-white"><div class="inner">${el.innerHTML}</div></div>`;
+      el.innerHTML = html;
+    }
   }
 
   wireDeadlineText();
@@ -135,7 +153,10 @@ function tick() {
   renderCountdown();
   if (remaining <= total * 0.1) {
     // Speed up the designer’s arm as the deadline nears
-    $(ARM_ID).css({ 'animation-duration': '0.2s' });
+    const armElement = document.querySelector(ARM_ID);
+    if (armElement) {
+      armElement.style.animationDuration = '0.2s';
+    }
   }
 }
 
