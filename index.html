@@ -24,21 +24,17 @@
   <h2>📋 Daily Tasks</h2>
 
   <form id="task-form">
-    <input type="text" id="task-input" placeholder="Enter a task..." aria-label="Add new task" />
+    <input type="text" id="task-input" placeholder="Enter a task..." />
   </form>
 
   <!-- Buttons in a single row -->
   <div id="task-controls">
-    <button id="addTaskBtn" aria-label="Add task">Add</button>
-    <button id="clearTasksBtn" aria-label="Clear all tasks">Clear</button>
-    <button id="exportTasksBtn" aria-label="Export tasks to file">Export</button>
-    <label id="auto-clear-label">
-      <input type="checkbox" id="autoClearTasks" />
-      <span>Auto-clear completed</span>
-    </label>
+    <button id="addTaskBtn">Add</button>
+    <button id="clearTasksBtn">Clear</button>
+    <button id="exportTasksBtn">Export</button>
   </div>
 
-  <ul id="task-list" role="list" aria-label="Task list"></ul>
+  <ul id="task-list"></ul>
 </aside>
 
 
@@ -117,86 +113,24 @@
         </svg>
       
     <div>
-      <div id="circular-progress">
-        <svg class="progress-ring" width="120" height="120">
-          <circle
-            class="progress-ring__circle"
-            stroke="rgba(255, 107, 107, 0.3)"
-            stroke-width="4"
-            fill="transparent"
-            r="54"
-            cx="60"
-            cy="60"/>
-          <circle
-            class="progress-ring__progress"
-            stroke="#FF6B6B"
-            stroke-width="4"
-            fill="transparent"
-            r="54"
-            cx="60"
-            cy="60"/>
-        </svg>
-        <div class="progress-percentage">0%</div>
-      </div>
       <h2 id="countDown">00 DAYS | 00 HRS | 00 MINS | 00 SECS</h2>
-      <div id="timer-label-display"></div>
     </div>
       
       </div>  
-<!-- ===== Preset Modes ============================================= -->
-<section id="presets">
-  <h3>⚡ Quick Presets</h3>
-  <div id="preset-buttons">
-    <button class="preset-btn" data-preset="pomodoro">🍅 Pomodoro<br><small>25 min</small></button>
-    <button class="preset-btn" data-preset="workout">💪 Workout<br><small>30 min</small></button>
-    <button class="preset-btn" data-preset="meditation">🧘 Meditation<br><small>10 min</small></button>
-    <button class="preset-btn" data-preset="presentation">📺 Presentation<br><small>20 min</small></button>
-  </div>
-</section>
-
 <!-- ===== Timer Controls =========================================== -->
 <section id="controls">
-  <div id="timer-label-section">
-    <label for="timer-label"><span>Timer Label</span><input type="text" id="timer-label" placeholder="e.g., Study Session" maxlength="20" aria-label="Timer session label" /></label>
-  </div>
-  <div id="time-inputs" role="group" aria-label="Timer duration inputs">
-    <label><span>Days</span><input type="number" id="days" min="0" value="0" aria-label="Days" /></label>
-    <label><span>Hours</span><input type="number" id="hours" min="0" max="23" value="0" aria-label="Hours" /></label>
-    <label><span>Mins</span><input type="number" id="minutes" min="0" max="59" value="0" aria-label="Minutes" /></label>
-    <label><span>Secs</span><input type="number" id="seconds" min="0" max="59" value="0" aria-label="Seconds" /></label>
-  </div>
+  <label><span>Days</span><input type="number" id="days" min="0" value="0" /></label>
+  <label><span>Hours</span><input type="number" id="hours" min="0" max="23" value="0" /></label>
+  <label><span>Mins</span><input type="number" id="minutes" min="0" max="59" value="0" /></label>
+  <label><span>Secs</span><input type="number" id="seconds" min="0" max="59" value="0" /></label>
 </section>
 
 <!-- New: Timer control buttons below input -->
-<section id="timer-buttons" role="group" aria-label="Timer controls">
-  <button id="startBtn" aria-label="Start timer" aria-keyshortcuts="Space">Start ⏱️</button>
-  <button id="pauseBtn" aria-label="Pause timer">Pause ⏸️</button>
-  <button id="resumeBtn" aria-label="Resume timer">Resume ▶️</button>
-  <button id="resetBtn" aria-label="Reset timer" aria-keyshortcuts="r">Reset 🔁</button>
-</section>
-
-<!-- ===== Sound & Theme Controls ================================== -->
-<section id="sound-controls">
-  <div id="sound-toggle">
-    <label>
-      <input type="checkbox" id="soundEnabled" checked />
-      <span>🔊 Sound Alerts</span>
-    </label>
-  </div>
-  <div id="accessibility-info">
-    <small style="color: rgba(255,255,255,0.7); text-align: center; display: block; margin-top: 0.5rem;">
-      ⌨️ Keyboard: Space = Start/Pause, R = Reset, ESC = Exit Fullscreen
-    </small>
-  </div>
-</section>
-
-<section id="theme-selector">
-  <span style="color: #fff; font-weight: 600; margin-right: 0.5rem;">🎨 Themes:</span>
-  <div class="theme-option default active" data-theme="default" title="Default"></div>
-  <div class="theme-option sunset" data-theme="sunset" title="Sunset"></div>
-  <div class="theme-option ocean" data-theme="ocean" title="Ocean"></div>
-  <div class="theme-option forest" data-theme="forest" title="Forest"></div>
-  <div class="theme-option daylight" data-theme="daylight" title="Daylight"></div>
+<section id="timer-buttons">
+  <button id="startBtn">Start ⏱️</button>
+  <button id="pauseBtn">Pause ⏸️</button>
+  <button id="resumeBtn">Resume ▶️</button>
+  <button id="resetBtn">Reset 🔁</button>
 </section>
 </body>
 </html>

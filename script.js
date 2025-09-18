@@ -15,101 +15,10 @@ let initialSet = 0;
 let paused = false;
 let pausedAt = 0;
 let timerId = null;
-let currentLabel = '';
 // Task management variables
 const addBtn = document.getElementById('addTaskBtn');
 const clearBtn = document.getElementById('clearTasksBtn');
 const exportBtn = document.getElementById('exportTasksBtn');
-
-// Preset configurations
-const PRESETS = {
-  pomodoro: { minutes: 25, label: '🍅 Pomodoro Session' },
-  workout: { minutes: 30, label: '💪 Workout Time' },
-  meditation: { minutes: 10, label: '🧘 Meditation' },
-  presentation: { minutes: 20, label: '📺 Presentation' }
-};
-
-// Sound notification
-function playNotificationSound() {
-  if (!document.getElementById('soundEnabled').checked) return;
-  
-  // Create a simple beep sound using Web Audio API
-  try {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    
-    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-    oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
-    oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.2);
-    
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-    
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.3);
-  } catch (error) {
-    console.log('Audio notification not supported');
-  }
-}
-
-// Browser notification
-function showBrowserNotification() {
-  if (Notification.permission === 'granted') {
-    const notification = new Notification('Timer Finished!', {
-      body: currentLabel || 'Your timer has finished.',
-      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⏰</text></svg>',
-      tag: 'timer-notification'
-    });
-    
-    notification.onclick = () => {
-      window.focus();
-      notification.close();
-    };
-    
-    setTimeout(() => notification.close(), 5000);
-  }
-}
-
-// Request notification permission on load
-if ('Notification' in window && Notification.permission === 'default') {
-  Notification.requestPermission();
-}
-
-// Session logging
-function logSession(duration, label) {
-  const sessions = JSON.parse(localStorage.getItem('timerSessions')) || [];
-  const session = {
-    date: new Date().toISOString(),
-    duration: duration,
-    label: label || 'Untitled Session',
-    completed: true
-  };
-  sessions.push(session);
-  
-  // Keep only last 50 sessions
-  if (sessions.length > 50) {
-    sessions.splice(0, sessions.length - 50);
-  }
-  
-  localStorage.setItem('timerSessions', JSON.stringify(sessions));
-}
-
-function getSessionStats() {
-  const sessions = JSON.parse(localStorage.getItem('timerSessions')) || [];
-  const today = new Date().toDateString();
-  const todaySessions = sessions.filter(s => new Date(s.date).toDateString() === today);
-  
-  return {
-    totalSessions: sessions.length,
-    todaySessions: todaySessions.length,
-    totalTimeToday: todaySessions.reduce((sum, s) => sum + s.duration, 0),
-    totalTimeAll: sessions.reduce((sum, s) => sum + s.duration, 0)
-  };
-}
 
 
 
@@ -211,58 +120,18 @@ function renderCountdown() {
   const m = Math.floor((remaining % 3600) / 60);
   const s = remaining % 60;
 
-  // Add smooth number transitions
-  const newText = `${z(d)} DAYS | ${z(h)} HRS | ${z(m)} MINS | ${z(s)} SECS`;
-  if (countOut.textContent !== newText) {
-    countOut.style.transform = "scale(0.95)";
-    setTimeout(() => {
-      countOut.textContent = newText;
-      countOut.style.transform = "scale(1)";
-    }, 100);
-  } else {
-    countOut.textContent = newText;
-  }
+  countOut.textContent = `${z(d)} DAYS | ${z(h)} HRS | ${z(m)} MINS | ${z(s)} SECS`;
   if (daysLabel) daysLabel.textContent = d;
 
   const pct = 1 - remaining / total;
   const shift = -SVG_WIDTH + SVG_WIDTH * pct;
   redRect.setAttribute('x', shift);
 
-  // Update circular progress
-  updateCircularProgress(pct);
-
   // Move Reaper smoothly
   const reaperX = pct * SVG_WIDTH+25; // 0.5 for centering
   const reaperGroup = document.getElementById('death-group');
   if (reaperGroup) {
     reaperGroup.style.transform = `translateX(${reaperX}px)`;
-  }
-
-  // Update label display
-  updateLabelDisplay();
-}
-function updateLabelDisplay() {
-  const labelDisplay = document.getElementById('timer-label-display');
-  if (currentLabel && remaining > 0) {
-    labelDisplay.textContent = currentLabel;
-    labelDisplay.classList.add('visible');
-  } else {
-    labelDisplay.classList.remove('visible');
-  }
-}
-function updateCircularProgress(pct) {
-  const circle = document.querySelector('.progress-ring__progress');
-  const percentage = document.querySelector('.progress-percentage');
-  
-  if (circle && percentage) {
-    const radius = circle.r.baseVal.value;
-    const circumference = radius * 2 * Math.PI;
-    const offset = circumference - (pct * circumference);
-    
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = offset;
-    
-    percentage.textContent = `${Math.round(pct * 100)}%`;
   }
 }
 
@@ -276,26 +145,12 @@ function tick() {
     remaining = 0;
     renderCountdown();
     document.exitFullscreen();
-    // Log completed session
-    logSession(initialSet, currentLabel);
-    
-    // Auto-clear completed tasks if enabled
-    if (document.getElementById('autoClearTasks').checked) {
-      const completedTasks = taskList.querySelectorAll('li.completed');
-      completedTasks.forEach(task => task.remove());
-      saveTasks();
-    }
-    
-    // Play sound and show notifications
-    playNotificationSound();
-    showBrowserNotification();
     alert('Time is up!');
     document.getElementById('deadline').classList.add('paused');
     return;
   }
   remaining--;
   renderCountdown();
-  updateLabelDisplay();
   if (remaining <= total * 0.1) {
     // Speed up the designer’s arm as the deadline nears
     const armElement = document.querySelector(ARM_ID);
@@ -319,9 +174,6 @@ document.getElementById('startBtn').addEventListener('click', () => {
     alert('Enter a valid duration!');
     return;
   }
-
-  // Get custom label
-  currentLabel = document.getElementById('timer-label').value.trim();
 
   document.getElementById('deadline').classList.remove('paused');
 
@@ -438,12 +290,10 @@ addBtn.addEventListener('click', () => {
 // Create and display task
 function addTask(text, done) {
   const li = document.createElement('li');
-  li.setAttribute('role', 'listitem');
 
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
   checkbox.checked = done;
-  checkbox.setAttribute('aria-label', `Mark "${text}" as ${done ? 'incomplete' : 'complete'}`);
 
   const label = document.createElement('label');
   label.textContent = text;
@@ -451,14 +301,11 @@ function addTask(text, done) {
   const deleteBtn = document.createElement('button');
   deleteBtn.textContent = '❌';
   deleteBtn.className = 'delete-btn';
-  deleteBtn.setAttribute('aria-label', `Delete task: ${text}`);
 
   li.classList.toggle('completed', done);
 
   checkbox.addEventListener('change', () => {
     li.classList.toggle('completed');
-    const isCompleted = li.classList.contains('completed');
-    checkbox.setAttribute('aria-label', `Mark "${text}" as ${isCompleted ? 'incomplete' : 'complete'}`);
     saveTasks();
   });
 
@@ -535,153 +382,3 @@ exportBtn.addEventListener('click', () => {
   a.click();
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ======== PRESET FUNCTIONALITY & EVENT LISTENERS =============== */
-
-// Preset button functionality
-document.addEventListener('DOMContentLoaded', () => {
-  const presetButtons = document.querySelectorAll('.preset-btn');
-  
-  presetButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const presetType = button.dataset.preset;
-      const preset = PRESETS[presetType];
-      
-      if (preset) {
-        // Set timer values
-        document.getElementById('days').value = 0;
-        document.getElementById('hours').value = 0;
-        document.getElementById('minutes').value = preset.minutes;
-        document.getElementById('seconds').value = 0;
-        
-        // Set custom label
-        document.getElementById('timer-label').value = preset.label;
-        
-        // Visual feedback
-        button.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-          button.style.transform = 'scale(1)';
-        }, 150);
-      }
-    });
-  });
-
-  // Theme selector functionality
-  const themeOptions = document.querySelectorAll('.theme-option');
-  
-  themeOptions.forEach(option => {
-    option.addEventListener('click', () => {
-      // Remove active class from all options
-      themeOptions.forEach(opt => opt.classList.remove('active'));
-      
-      // Add active class to clicked option
-      option.classList.add('active');
-      
-      // Remove all theme classes from body
-      document.body.classList.remove('theme-sunset', 'theme-ocean', 'theme-forest', 'theme-daylight');
-      
-      // Add selected theme class
-      const theme = option.dataset.theme;
-      if (theme !== 'default') {
-        document.body.classList.add(`theme-${theme}`);
-      }
-      
-      // Save theme preference
-      localStorage.setItem('selectedTheme', theme);
-      
-      // Visual feedback
-      option.style.transform = 'scale(0.9)';
-      setTimeout(() => {
-        option.style.transform = 'scale(1.15)';
-      }, 100);
-    });
-  });
-
-  // Load saved theme
-  const savedTheme = localStorage.getItem('selectedTheme') || 'default';
-  const savedThemeOption = document.querySelector(`[data-theme="${savedTheme}"]`);
-  if (savedThemeOption) {
-    savedThemeOption.click();
-  }
-
-  // Keyboard shortcuts
-  document.addEventListener('keydown', (e) => {
-    // Don't trigger shortcuts when typing in input fields
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-      return;
-    }
-
-    switch (e.key.toLowerCase()) {
-      case ' ': // Space - Start/Pause
-        e.preventDefault();
-        if (timerId) {
-          document.getElementById('pauseBtn').click();
-        } else if (paused) {
-          document.getElementById('resumeBtn').click();
-        } else {
-          document.getElementById('startBtn').click();
-        }
-        break;
-      case 'r': // R - Reset
-        e.preventDefault();
-        document.getElementById('resetBtn').click();
-        break;
-      case 'escape': // ESC - Exit fullscreen
-        if (document.fullscreenElement) {
-          document.exitFullscreen();
-        }
-        break;
-      case '1': case '2': case '3': case '4': // Number keys for presets
-        e.preventDefault();
-        const presetButtons = document.querySelectorAll('.preset-btn');
-        const index = parseInt(e.key) - 1;
-        if (presetButtons[index]) {
-          presetButtons[index].click();
-        }
-        break;
-    }
-  });
-});
