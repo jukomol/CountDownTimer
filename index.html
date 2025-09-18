@@ -113,6 +113,27 @@
         </svg>
       
     <div>
+      <div id="circular-progress">
+        <svg class="progress-ring" width="120" height="120">
+          <circle
+            class="progress-ring__circle"
+            stroke="rgba(255, 107, 107, 0.3)"
+            stroke-width="4"
+            fill="transparent"
+            r="54"
+            cx="60"
+            cy="60"/>
+          <circle
+            class="progress-ring__progress"
+            stroke="#FF6B6B"
+            stroke-width="4"
+            fill="transparent"
+            r="54"
+            cx="60"
+            cy="60"/>
+        </svg>
+        <div class="progress-percentage">0%</div>
+      </div>
       <h2 id="countDown">00 DAYS | 00 HRS | 00 MINS | 00 SECS</h2>
       <div id="timer-label-display"></div>
     </div>
@@ -150,7 +171,7 @@
   <button id="resetBtn">Reset 🔁</button>
 </section>
 
-<!-- ===== Sound Controls =========================================== -->
+<!-- ===== Sound & Theme Controls ================================== -->
 <section id="sound-controls">
   <div id="sound-toggle">
     <label>
@@ -158,6 +179,15 @@
       <span>🔊 Sound Alerts</span>
     </label>
   </div>
+</section>
+
+<section id="theme-selector">
+  <span style="color: #fff; font-weight: 600; margin-right: 0.5rem;">🎨 Themes:</span>
+  <div class="theme-option default active" data-theme="default" title="Default"></div>
+  <div class="theme-option sunset" data-theme="sunset" title="Sunset"></div>
+  <div class="theme-option ocean" data-theme="ocean" title="Ocean"></div>
+  <div class="theme-option forest" data-theme="forest" title="Forest"></div>
+  <div class="theme-option daylight" data-theme="daylight" title="Daylight"></div>
 </section>
 </body>
 </html>

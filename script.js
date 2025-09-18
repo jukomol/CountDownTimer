@@ -196,12 +196,18 @@ function renderCountdown() {
   const shift = -SVG_WIDTH + SVG_WIDTH * pct;
   redRect.setAttribute('x', shift);
 
+  // Update circular progress
+  updateCircularProgress(pct);
+
   // Move Reaper smoothly
   const reaperX = pct * SVG_WIDTH+25; // 0.5 for centering
   const reaperGroup = document.getElementById('death-group');
   if (reaperGroup) {
     reaperGroup.style.transform = `translateX(${reaperX}px)`;
   }
+
+  // Update label display
+  updateLabelDisplay();
 }
 function updateLabelDisplay() {
   const labelDisplay = document.getElementById('timer-label-display');
@@ -210,6 +216,21 @@ function updateLabelDisplay() {
     labelDisplay.classList.add('visible');
   } else {
     labelDisplay.classList.remove('visible');
+  }
+}
+function updateCircularProgress(pct) {
+  const circle = document.querySelector('.progress-ring__progress');
+  const percentage = document.querySelector('.progress-percentage');
+  
+  if (circle && percentage) {
+    const radius = circle.r.baseVal.value;
+    const circumference = radius * 2 * Math.PI;
+    const offset = circumference - (pct * circumference);
+    
+    circle.style.strokeDasharray = `${circumference} ${circumference}`;
+    circle.style.strokeDashoffset = offset;
+    
+    percentage.textContent = `${Math.round(pct * 100)}%`;
   }
 }
 
@@ -540,4 +561,42 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Theme selector functionality
+  const themeOptions = document.querySelectorAll('.theme-option');
+  
+  themeOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      // Remove active class from all options
+      themeOptions.forEach(opt => opt.classList.remove('active'));
+      
+      // Add active class to clicked option
+      option.classList.add('active');
+      
+      // Remove all theme classes from body
+      document.body.classList.remove('theme-sunset', 'theme-ocean', 'theme-forest', 'theme-daylight');
+      
+      // Add selected theme class
+      const theme = option.dataset.theme;
+      if (theme !== 'default') {
+        document.body.classList.add(`theme-${theme}`);
+      }
+      
+      // Save theme preference
+      localStorage.setItem('selectedTheme', theme);
+      
+      // Visual feedback
+      option.style.transform = 'scale(0.9)';
+      setTimeout(() => {
+        option.style.transform = 'scale(1.15)';
+      }, 100);
+    });
+  });
+
+  // Load saved theme
+  const savedTheme = localStorage.getItem('selectedTheme') || 'default';
+  const savedThemeOption = document.querySelector(`[data-theme="${savedTheme}"]`);
+  if (savedThemeOption) {
+    savedThemeOption.click();
+  }
 });

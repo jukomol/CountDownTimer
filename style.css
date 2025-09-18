@@ -658,6 +658,140 @@ body.dark #task-panel {
 }
 
 /* ==============================
+   CIRCULAR PROGRESS INDICATOR
+============================== */
+
+#circular-progress {
+  position: relative;
+  display: inline-block;
+  margin: 1rem auto 2rem;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+  transition: all 0.3s ease;
+}
+
+.progress-ring__circle {
+  transition: stroke-dasharray 0.3s ease;
+}
+
+.progress-ring__progress {
+  transition: stroke-dasharray 0.5s ease;
+  stroke-dasharray: 0 339.292;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(255, 107, 107, 0.4));
+}
+
+.progress-percentage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #FF6B6B;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .progress-ring__progress {
+  stroke: #FFD700;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
+}
+
+body.dark .progress-percentage {
+  color: #FFD700;
+}
+
+/* Theme selector */
+#theme-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  margin: 1rem auto;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(31, 38, 135, 0.2);
+  flex-wrap: wrap;
+}
+
+.theme-option {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.theme-option:hover {
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.theme-option.active {
+  border-color: #FF6B6B;
+  transform: scale(1.15);
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+}
+
+.theme-option.default {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.theme-option.sunset {
+  background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+}
+
+.theme-option.ocean {
+  background: linear-gradient(135deg, #667db6 0%, #0082c8 100%);
+}
+
+.theme-option.forest {
+  background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
+}
+
+.theme-option.daylight {
+  background: linear-gradient(135deg, #e3ffe7 0%, #d9e7ff 100%);
+}
+
+/* Theme variations */
+body.theme-sunset {
+  background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+}
+
+body.theme-ocean {
+  background: linear-gradient(135deg, #667db6 0%, #0082c8 100%);
+}
+
+body.theme-forest {
+  background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
+}
+
+body.theme-daylight {
+  background: linear-gradient(135deg, #e3ffe7 0%, #d9e7ff 100%);
+  color: #333;
+}
+
+body.theme-daylight header {
+  background: rgba(255, 255, 255, 0.98);
+  color: #333;
+}
+
+body.theme-daylight #title {
+  background: linear-gradient(45deg, #ff7e5f, #feb47b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ==============================
    RESPONSIVE DESIGN
 ============================== */
 
@@ -897,6 +1031,29 @@ body.dark #task-panel {
     font-size: 0.9rem;
     padding: 0.8rem 1rem;
     min-width: 100px;
+  }
+
+  #circular-progress {
+    margin: 0.5rem auto 1rem;
+  }
+
+  .progress-ring {
+    width: 80px;
+    height: 80px;
+  }
+
+  .progress-percentage {
+    font-size: 1rem;
+  }
+
+  #theme-selector {
+    gap: 0.5rem;
+    padding: 0.8rem;
+  }
+
+  .theme-option {
+    width: 30px;
+    height: 30px;
   }
   
   #controls label {
