@@ -24,17 +24,21 @@
   <h2>📋 Daily Tasks</h2>
 
   <form id="task-form">
-    <input type="text" id="task-input" placeholder="Enter a task..." />
+    <input type="text" id="task-input" placeholder="Enter a task..." aria-label="Add new task" />
   </form>
 
   <!-- Buttons in a single row -->
   <div id="task-controls">
-    <button id="addTaskBtn">Add</button>
-    <button id="clearTasksBtn">Clear</button>
-    <button id="exportTasksBtn">Export</button>
+    <button id="addTaskBtn" aria-label="Add task">Add</button>
+    <button id="clearTasksBtn" aria-label="Clear all tasks">Clear</button>
+    <button id="exportTasksBtn" aria-label="Export tasks to file">Export</button>
+    <label id="auto-clear-label">
+      <input type="checkbox" id="autoClearTasks" />
+      <span>Auto-clear completed</span>
+    </label>
   </div>
 
-  <ul id="task-list"></ul>
+  <ul id="task-list" role="list" aria-label="Task list"></ul>
 </aside>
 
 
@@ -153,22 +157,22 @@
 <!-- ===== Timer Controls =========================================== -->
 <section id="controls">
   <div id="timer-label-section">
-    <label for="timer-label"><span>Timer Label</span><input type="text" id="timer-label" placeholder="e.g., Study Session" maxlength="20" /></label>
+    <label for="timer-label"><span>Timer Label</span><input type="text" id="timer-label" placeholder="e.g., Study Session" maxlength="20" aria-label="Timer session label" /></label>
   </div>
-  <div id="time-inputs">
-    <label><span>Days</span><input type="number" id="days" min="0" value="0" /></label>
-    <label><span>Hours</span><input type="number" id="hours" min="0" max="23" value="0" /></label>
-    <label><span>Mins</span><input type="number" id="minutes" min="0" max="59" value="0" /></label>
-    <label><span>Secs</span><input type="number" id="seconds" min="0" max="59" value="0" /></label>
+  <div id="time-inputs" role="group" aria-label="Timer duration inputs">
+    <label><span>Days</span><input type="number" id="days" min="0" value="0" aria-label="Days" /></label>
+    <label><span>Hours</span><input type="number" id="hours" min="0" max="23" value="0" aria-label="Hours" /></label>
+    <label><span>Mins</span><input type="number" id="minutes" min="0" max="59" value="0" aria-label="Minutes" /></label>
+    <label><span>Secs</span><input type="number" id="seconds" min="0" max="59" value="0" aria-label="Seconds" /></label>
   </div>
 </section>
 
 <!-- New: Timer control buttons below input -->
-<section id="timer-buttons">
-  <button id="startBtn">Start ⏱️</button>
-  <button id="pauseBtn">Pause ⏸️</button>
-  <button id="resumeBtn">Resume ▶️</button>
-  <button id="resetBtn">Reset 🔁</button>
+<section id="timer-buttons" role="group" aria-label="Timer controls">
+  <button id="startBtn" aria-label="Start timer" aria-keyshortcuts="Space">Start ⏱️</button>
+  <button id="pauseBtn" aria-label="Pause timer">Pause ⏸️</button>
+  <button id="resumeBtn" aria-label="Resume timer">Resume ▶️</button>
+  <button id="resetBtn" aria-label="Reset timer" aria-keyshortcuts="r">Reset 🔁</button>
 </section>
 
 <!-- ===== Sound & Theme Controls ================================== -->
@@ -178,6 +182,11 @@
       <input type="checkbox" id="soundEnabled" checked />
       <span>🔊 Sound Alerts</span>
     </label>
+  </div>
+  <div id="accessibility-info">
+    <small style="color: rgba(255,255,255,0.7); text-align: center; display: block; margin-top: 0.5rem;">
+      ⌨️ Keyboard: Space = Start/Pause, R = Reset, ESC = Exit Fullscreen
+    </small>
   </div>
 </section>
 

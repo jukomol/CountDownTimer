@@ -79,6 +79,38 @@ if ('Notification' in window && Notification.permission === 'default') {
   Notification.requestPermission();
 }
 
+// Session logging
+function logSession(duration, label) {
+  const sessions = JSON.parse(localStorage.getItem('timerSessions')) || [];
+  const session = {
+    date: new Date().toISOString(),
+    duration: duration,
+    label: label || 'Untitled Session',
+    completed: true
+  };
+  sessions.push(session);
+  
+  // Keep only last 50 sessions
+  if (sessions.length > 50) {
+    sessions.splice(0, sessions.length - 50);
+  }
+  
+  localStorage.setItem('timerSessions', JSON.stringify(sessions));
+}
+
+function getSessionStats() {
+  const sessions = JSON.parse(localStorage.getItem('timerSessions')) || [];
+  const today = new Date().toDateString();
+  const todaySessions = sessions.filter(s => new Date(s.date).toDateString() === today);
+  
+  return {
+    totalSessions: sessions.length,
+    todaySessions: todaySessions.length,
+    totalTimeToday: todaySessions.reduce((sum, s) => sum + s.duration, 0),
+    totalTimeAll: sessions.reduce((sum, s) => sum + s.duration, 0)
+  };
+}
+
 
 
 
@@ -244,6 +276,16 @@ function tick() {
     remaining = 0;
     renderCountdown();
     document.exitFullscreen();
+    // Log completed session
+    logSession(initialSet, currentLabel);
+    
+    // Auto-clear completed tasks if enabled
+    if (document.getElementById('autoClearTasks').checked) {
+      const completedTasks = taskList.querySelectorAll('li.completed');
+      completedTasks.forEach(task => task.remove());
+      saveTasks();
+    }
+    
     // Play sound and show notifications
     playNotificationSound();
     showBrowserNotification();
@@ -396,10 +438,12 @@ addBtn.addEventListener('click', () => {
 // Create and display task
 function addTask(text, done) {
   const li = document.createElement('li');
+  li.setAttribute('role', 'listitem');
 
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
   checkbox.checked = done;
+  checkbox.setAttribute('aria-label', `Mark "${text}" as ${done ? 'incomplete' : 'complete'}`);
 
   const label = document.createElement('label');
   label.textContent = text;
@@ -407,11 +451,14 @@ function addTask(text, done) {
   const deleteBtn = document.createElement('button');
   deleteBtn.textContent = '❌';
   deleteBtn.className = 'delete-btn';
+  deleteBtn.setAttribute('aria-label', `Delete task: ${text}`);
 
   li.classList.toggle('completed', done);
 
   checkbox.addEventListener('change', () => {
     li.classList.toggle('completed');
+    const isCompleted = li.classList.contains('completed');
+    checkbox.setAttribute('aria-label', `Mark "${text}" as ${isCompleted ? 'incomplete' : 'complete'}`);
     saveTasks();
   });
 
@@ -599,4 +646,42 @@ document.addEventListener('DOMContentLoaded', () => {
   if (savedThemeOption) {
     savedThemeOption.click();
   }
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    // Don't trigger shortcuts when typing in input fields
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+      return;
+    }
+
+    switch (e.key.toLowerCase()) {
+      case ' ': // Space - Start/Pause
+        e.preventDefault();
+        if (timerId) {
+          document.getElementById('pauseBtn').click();
+        } else if (paused) {
+          document.getElementById('resumeBtn').click();
+        } else {
+          document.getElementById('startBtn').click();
+        }
+        break;
+      case 'r': // R - Reset
+        e.preventDefault();
+        document.getElementById('resetBtn').click();
+        break;
+      case 'escape': // ESC - Exit fullscreen
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+        break;
+      case '1': case '2': case '3': case '4': // Number keys for presets
+        e.preventDefault();
+        const presetButtons = document.querySelectorAll('.preset-btn');
+        const index = parseInt(e.key) - 1;
+        if (presetButtons[index]) {
+          presetButtons[index].click();
+        }
+        break;
+    }
+  });
 });
