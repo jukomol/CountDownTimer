@@ -15,10 +15,69 @@ let initialSet = 0;
 let paused = false;
 let pausedAt = 0;
 let timerId = null;
+let currentLabel = '';
 // Task management variables
 const addBtn = document.getElementById('addTaskBtn');
 const clearBtn = document.getElementById('clearTasksBtn');
 const exportBtn = document.getElementById('exportTasksBtn');
+
+// Preset configurations
+const PRESETS = {
+  pomodoro: { minutes: 25, label: '🍅 Pomodoro Session' },
+  workout: { minutes: 30, label: '💪 Workout Time' },
+  meditation: { minutes: 10, label: '🧘 Meditation' },
+  presentation: { minutes: 20, label: '📺 Presentation' }
+};
+
+// Sound notification
+function playNotificationSound() {
+  if (!document.getElementById('soundEnabled').checked) return;
+  
+  // Create a simple beep sound using Web Audio API
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+    oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+    oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.2);
+    
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+  } catch (error) {
+    console.log('Audio notification not supported');
+  }
+}
+
+// Browser notification
+function showBrowserNotification() {
+  if (Notification.permission === 'granted') {
+    const notification = new Notification('Timer Finished!', {
+      body: currentLabel || 'Your timer has finished.',
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⏰</text></svg>',
+      tag: 'timer-notification'
+    });
+    
+    notification.onclick = () => {
+      window.focus();
+      notification.close();
+    };
+    
+    setTimeout(() => notification.close(), 5000);
+  }
+}
+
+// Request notification permission on load
+if ('Notification' in window && Notification.permission === 'default') {
+  Notification.requestPermission();
+}
 
 
 
@@ -120,7 +179,17 @@ function renderCountdown() {
   const m = Math.floor((remaining % 3600) / 60);
   const s = remaining % 60;
 
-  countOut.textContent = `${z(d)} DAYS | ${z(h)} HRS | ${z(m)} MINS | ${z(s)} SECS`;
+  // Add smooth number transitions
+  const newText = `${z(d)} DAYS | ${z(h)} HRS | ${z(m)} MINS | ${z(s)} SECS`;
+  if (countOut.textContent !== newText) {
+    countOut.style.transform = "scale(0.95)";
+    setTimeout(() => {
+      countOut.textContent = newText;
+      countOut.style.transform = "scale(1)";
+    }, 100);
+  } else {
+    countOut.textContent = newText;
+  }
   if (daysLabel) daysLabel.textContent = d;
 
   const pct = 1 - remaining / total;
@@ -134,6 +203,15 @@ function renderCountdown() {
     reaperGroup.style.transform = `translateX(${reaperX}px)`;
   }
 }
+function updateLabelDisplay() {
+  const labelDisplay = document.getElementById('timer-label-display');
+  if (currentLabel && remaining > 0) {
+    labelDisplay.textContent = currentLabel;
+    labelDisplay.classList.add('visible');
+  } else {
+    labelDisplay.classList.remove('visible');
+  }
+}
 
 
 
@@ -145,12 +223,16 @@ function tick() {
     remaining = 0;
     renderCountdown();
     document.exitFullscreen();
+    // Play sound and show notifications
+    playNotificationSound();
+    showBrowserNotification();
     alert('Time is up!');
     document.getElementById('deadline').classList.add('paused');
     return;
   }
   remaining--;
   renderCountdown();
+  updateLabelDisplay();
   if (remaining <= total * 0.1) {
     // Speed up the designer’s arm as the deadline nears
     const armElement = document.querySelector(ARM_ID);
@@ -174,6 +256,9 @@ document.getElementById('startBtn').addEventListener('click', () => {
     alert('Enter a valid duration!');
     return;
   }
+
+  // Get custom label
+  currentLabel = document.getElementById('timer-label').value.trim();
 
   document.getElementById('deadline').classList.remove('paused');
 
@@ -382,3 +467,77 @@ exportBtn.addEventListener('click', () => {
   a.click();
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ======== PRESET FUNCTIONALITY & EVENT LISTENERS =============== */
+
+// Preset button functionality
+document.addEventListener('DOMContentLoaded', () => {
+  const presetButtons = document.querySelectorAll('.preset-btn');
+  
+  presetButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const presetType = button.dataset.preset;
+      const preset = PRESETS[presetType];
+      
+      if (preset) {
+        // Set timer values
+        document.getElementById('days').value = 0;
+        document.getElementById('hours').value = 0;
+        document.getElementById('minutes').value = preset.minutes;
+        document.getElementById('seconds').value = 0;
+        
+        // Set custom label
+        document.getElementById('timer-label').value = preset.label;
+        
+        // Visual feedback
+        button.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          button.style.transform = 'scale(1)';
+        }, 150);
+      }
+    });
+  });
+});

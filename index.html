@@ -114,15 +114,32 @@
       
     <div>
       <h2 id="countDown">00 DAYS | 00 HRS | 00 MINS | 00 SECS</h2>
+      <div id="timer-label-display"></div>
     </div>
       
       </div>  
+<!-- ===== Preset Modes ============================================= -->
+<section id="presets">
+  <h3>⚡ Quick Presets</h3>
+  <div id="preset-buttons">
+    <button class="preset-btn" data-preset="pomodoro">🍅 Pomodoro<br><small>25 min</small></button>
+    <button class="preset-btn" data-preset="workout">💪 Workout<br><small>30 min</small></button>
+    <button class="preset-btn" data-preset="meditation">🧘 Meditation<br><small>10 min</small></button>
+    <button class="preset-btn" data-preset="presentation">📺 Presentation<br><small>20 min</small></button>
+  </div>
+</section>
+
 <!-- ===== Timer Controls =========================================== -->
 <section id="controls">
-  <label><span>Days</span><input type="number" id="days" min="0" value="0" /></label>
-  <label><span>Hours</span><input type="number" id="hours" min="0" max="23" value="0" /></label>
-  <label><span>Mins</span><input type="number" id="minutes" min="0" max="59" value="0" /></label>
-  <label><span>Secs</span><input type="number" id="seconds" min="0" max="59" value="0" /></label>
+  <div id="timer-label-section">
+    <label for="timer-label"><span>Timer Label</span><input type="text" id="timer-label" placeholder="e.g., Study Session" maxlength="20" /></label>
+  </div>
+  <div id="time-inputs">
+    <label><span>Days</span><input type="number" id="days" min="0" value="0" /></label>
+    <label><span>Hours</span><input type="number" id="hours" min="0" max="23" value="0" /></label>
+    <label><span>Mins</span><input type="number" id="minutes" min="0" max="59" value="0" /></label>
+    <label><span>Secs</span><input type="number" id="seconds" min="0" max="59" value="0" /></label>
+  </div>
 </section>
 
 <!-- New: Timer control buttons below input -->
@@ -131,6 +148,16 @@
   <button id="pauseBtn">Pause ⏸️</button>
   <button id="resumeBtn">Resume ▶️</button>
   <button id="resetBtn">Reset 🔁</button>
+</section>
+
+<!-- ===== Sound Controls =========================================== -->
+<section id="sound-controls">
+  <div id="sound-toggle">
+    <label>
+      <input type="checkbox" id="soundEnabled" checked />
+      <span>🔊 Sound Alerts</span>
+    </label>
+  </div>
 </section>
 </body>
 </html>
