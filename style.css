@@ -14,7 +14,7 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
-  color: #222;
+  color: #d6d9d0;
   transition: all 0.3s ease;
   min-height: 100vh;
   position: relative;
@@ -845,3 +845,4 @@ body.dark #task-panel {
     padding: 0.8rem;
   }
 }
+
