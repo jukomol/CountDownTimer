@@ -15,10 +15,68 @@ let initialSet = 0;
 let paused = false;
 let pausedAt = 0;
 let timerId = null;
+let audioMuted = false;
+
 // Task management variables
 const addBtn = document.getElementById('addTaskBtn');
 const clearBtn = document.getElementById('clearTasksBtn');
 const exportBtn = document.getElementById('exportTasksBtn');
+
+// Audio context for timer completion sound
+let audioContext;
+let timerCompleteSound;
+
+// Initialize audio and notifications
+function initializeAudioAndNotifications() {
+  // Request notification permission
+  if ('Notification' in window) {
+    Notification.requestPermission();
+  }
+
+  // Initialize audio context for chime sound
+  try {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    createTimerCompleteSound();
+  } catch (e) {
+    console.log('Audio not supported');
+  }
+}
+
+// Create a simple chime sound using Web Audio API
+function createTimerCompleteSound() {
+  if (!audioContext) return;
+  
+  timerCompleteSound = () => {
+    if (audioMuted) return;
+    
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+    oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+    oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.2);
+    
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
+  };
+}
+
+// Show browser notification
+function showNotification(title, message) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(title, {
+      body: message,
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⏰</text></svg>',
+      requireInteraction: true
+    });
+  }
+}
 
 
 
@@ -77,6 +135,9 @@ document.addEventListener('DOMContentLoaded', function () {
   wireDeadlineText();
   deadlineAnimation();
   setInterval(deadlineAnimation, ANIMATION_CYCLE * 1000);   // repeat loop
+  
+  // Initialize audio and notifications
+  initializeAudioAndNotifications();
 });
 
 
@@ -93,12 +154,19 @@ tickClock();   // initial paint
 
 
 /* ==================================================================
-   3) DARK‑MODE TOGGLE
+   3) DARK‑MODE TOGGLE & MUTE TOGGLE
    =================================================================*/
 const toggleBtn = document.getElementById('darkToggle');
 toggleBtn.addEventListener('click', () => {
   document.body.classList.toggle('dark');
   toggleBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+});
+
+const muteBtn = document.getElementById('muteToggle');
+muteBtn.addEventListener('click', () => {
+  audioMuted = !audioMuted;
+  muteBtn.textContent = audioMuted ? '🔇' : '🔊';
+  muteBtn.classList.toggle('muted', audioMuted);
 });
 
 
@@ -135,6 +203,34 @@ function renderCountdown() {
   }
 }
 
+// Enhanced renderCountdown with smooth transitions
+function renderCountdownSmooth() {
+  const d = Math.floor(remaining / 86400);
+  const h = Math.floor((remaining % 86400) / 3600);
+  const m = Math.floor((remaining % 3600) / 60);
+  const s = remaining % 60;
+
+  // Add smooth transition effect
+  countOut.classList.add('updating');
+  setTimeout(() => {
+    countOut.textContent = `${z(d)} DAYS | ${z(h)} HRS | ${z(m)} MINS | ${z(s)} SECS`;
+    countOut.classList.remove('updating');
+  }, 150);
+
+  if (daysLabel) daysLabel.textContent = d;
+
+  const pct = 1 - remaining / total;
+  const shift = -SVG_WIDTH + SVG_WIDTH * pct;
+  redRect.setAttribute('x', shift);
+
+  // Move Reaper smoothly
+  const reaperX = pct * SVG_WIDTH+25;
+  const reaperGroup = document.getElementById('death-group');
+  if (reaperGroup) {
+    reaperGroup.style.transform = `translateX(${reaperX}px)`;
+  }
+}
+
 
 
 /* ---- one‑second heartbeat ----------------------------------------*/
@@ -145,12 +241,21 @@ function tick() {
     remaining = 0;
     renderCountdown();
     document.exitFullscreen();
+    
+    // Play completion sound
+    if (timerCompleteSound) {
+      timerCompleteSound();
+    }
+    
+    // Show notification
+    showNotification('Timer Complete!', 'Your countdown timer has finished.');
+    
     alert('Time is up!');
     document.getElementById('deadline').classList.add('paused');
     return;
   }
   remaining--;
-  renderCountdown();
+  renderCountdownSmooth();
   if (remaining <= total * 0.1) {
     // Speed up the designer’s arm as the deadline nears
     const armElement = document.querySelector(ARM_ID);
