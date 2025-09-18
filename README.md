@@ -1,87 +1,71 @@
-# ⏳ WORK-MODE Timer
+---
 
- A web-based productivity timer designed to help you **focus deeply on your work**. Visualize time pressure with an animated **Grim Reaper** marching toward your deadline and keep track of your daily goals using the built-in task manager.
+# ⏳ CountDownTimer
 
-> Use this app in fullscreen browser mode during your work/study sessions for distraction-free productivity.
+A clean, responsive, and user-friendly web-based countdown timer built with **HTML, CSS, and JavaScript**. Use it for **study sessions, workouts, presentations, or daily productivity** — simple yet effective.
 
-Live: https://jukomol.github.io/CountDownTimer/
-
-![image](https://github.com/user-attachments/assets/13dbdd7c-8d17-42d0-9fcc-abef9c8191a5)
-
-
-
-## 🔧 Features
-
-* 🕐 **Multi-unit Countdown**: Track Days, Hours, Minutes, and Seconds.
-* 💀 **SVG Grim Reaper**: Animates across the screen to visualize approaching deadlines.
-* 🔁 **Pause, Resume, Reset**: Full control over countdown behavior.
-* 🌑 **Dark Mode**: Toggle between light and dark themes.
-* ✅ **Task Manager**:
-
-  * Add/remove daily tasks.
-  * Checkbox to mark completion.
-  * Fade effect for completed items.
-  * LocalStorage persistence.
-  * Export completed/uncompleted task report (`.txt`).
+🔗 **Live Demo:** [CountDownTimer](https://jukomol.github.io/CountDownTimer/)
 
 ---
 
-## 📂 Project Structure
+## ✨ Features
 
-```bash
-├── index.html        # Main HTML structure
-├── style.css         # CSS for layout, animation, and responsive design
-├── script.js         # Core logic: timer, reaper animation, tasks
-├── assets/           # SVG images, sounds (optional)
-└── README.md         # Project documentation
-```
+* 🕒 **Customizable Timer** – Set any duration and control with Start / Pause / Reset
+* 📊 **Progress Bar** – Visualize the remaining time
+* ✅ **Task Checklist Panel** – Keep track of tasks alongside your timer
+* 🎨 **Light & Dark Modes** – Switch between soothing gradients or darker tones
+* 📱 **Mobile Responsive** – Works smoothly across devices
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Planned Improvements
 
-### 🔨 Setup
+* Preset modes (*Pomodoro, Workout, Meditation*)
+* Notifications & alert sounds
+* Session logging & productivity stats
+* Sharable presets and themes
+* Improved accessibility (keyboard shortcuts, ARIA support)
 
-1. Clone the repository:
+---
+
+## 🛠️ Installation & Usage
+
+1. Clone this repository:
 
    ```bash
-   git clone https://github.com/jukomol/CountDownTimer
+   git clone https://github.com/jukomol/CountDownTimer.git
+   ```
+2. Navigate into the project folder:
+
+   ```bash
    cd CountDownTimer
    ```
+3. Open `index.html` in your browser.
 
-2. Open `index.html` in your browser.
-
-> No build tools or dependencies required — pure HTML, CSS, and JS (with optional jQuery).
+That’s it! No build tools or dependencies required.
 
 ---
 
-## 📦 Deployment
+## 📷 Preview
 
-You can deploy this easily with GitHub Pages:
+![screenshot](https://github.com/user-attachments/assets/d30260c6-6358-45be-a663-cb291e51e57a)
 
-```bash
-# Inside your repo
-git add .
-git commit -m "Deploy"
-git push origin main
-```
+---
 
-Then go to **Repo Settings > Pages** and choose the root of the `main` branch.
+## 🤝 Contributing
+
+Contributions are welcome! Here’s how you can help:
+
+1. Fork the repo
+2. Create a new branch (`feature/new-feature`)
+3. Commit your changes
+4. Push and submit a Pull Request
 
 ---
 
 ## 📜 License
 
-[MIT License](LICENSE)
-
-Feel free to fork, use, and modify for personal or commercial use.
+This project is licensed under the **MIT License** – free to use, modify, and distribute.
 
 ---
-
-## 🙏 Acknowledgments
-
-* This app is an extension of https://github.com/alkhalidsardar/Deadline-loading-bar
-* Thanks to Al Khalid
-
-
 
