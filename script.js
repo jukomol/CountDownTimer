@@ -154,14 +154,8 @@ tickClock();   // initial paint
 
 
 /* ==================================================================
-   3) DARK‑MODE TOGGLE & MUTE TOGGLE
+   3) MUTE TOGGLE
    =================================================================*/
-const toggleBtn = document.getElementById('darkToggle');
-toggleBtn.addEventListener('click', () => {
-  document.body.classList.toggle('dark');
-  toggleBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-});
-
 const muteBtn = document.getElementById('muteToggle');
 muteBtn.addEventListener('click', () => {
   audioMuted = !audioMuted;
