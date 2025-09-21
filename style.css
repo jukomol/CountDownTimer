@@ -663,7 +663,7 @@ header h1 {
   }
 
   #deadline {
-    margin: 1rem;
+    margin: 1rem auto;
     padding: 1rem;
   }
   
