@@ -240,6 +240,7 @@ header h1 {
   transform: scale(0.98);
 }
 
+/* 1) Make the card a flex container so content is truly centered */
 #deadline {
   width: 100%;
   max-width: 700px;
@@ -252,8 +253,15 @@ header h1 {
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+
+  /* new */
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* horizontal centering */
+  justify-content: center; /* optional: vertical centering within the card */
 }
 
+/* 2) Let the svg scale/center correctly */
 #deadline svg {
   width: 100%;
   height: auto;
@@ -262,13 +270,28 @@ header h1 {
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
   min-height: 120px;
   max-height: 200px;
+
+  /* optional but helpful if you keep preserveAspectRatio from HTML:
+     nothing extra needed here—see HTML tweak below */
 }
 
-/* Better mobile responsiveness for SVG */
+/* 3) Undo the lateral push on small screens */
+#death-group {
+  visibility: visible;
+  display: block;
+  transform: translateX(100px);
+  transition: transform 1s linear;
+  will-change: transform;
+}
+
 @media (max-width: 768px) {
   #deadline svg {
     min-height: 80px;
     max-height: 120px;
+  }
+  /* remove the right shift on mobile */
+  #death-group {
+    transform: none;
   }
 }
 
@@ -279,19 +302,11 @@ header h1 {
   }
 }
 
-#death-group {
-  visibility: visible;
-  display: block;
-  transform: translateX(100px);
-  transition: transform 1s linear;
-  will-change: transform;
-}
-
+/* existing animations left as-is */
 #death-arm {
   transform-origin: top right;
   animation: swingArm 1s infinite ease-in-out;
 }
-
 @keyframes swingArm {
   0% { transform: translateY(0); }
   50% { transform: translateY(-5px); }
@@ -301,7 +316,6 @@ header h1 {
 #designer-arm-grop {
   animation: pulse 2s infinite ease-in-out;
 }
-
 @keyframes pulse {
   0% { transform: translateY(0); }
   50% { transform: translateY(-2px); }
