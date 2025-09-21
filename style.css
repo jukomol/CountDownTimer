@@ -240,29 +240,79 @@ header h1 {
 }
 
 /* 1) Make the card a flex container so content is truly centered */
-#deadline { width: 100%;
-           max-width: 700px;
-           margin: auto;
-           padding: 2rem;
-           position: relative;
-           text-align: center;
-           background: rgba(255, 255, 255, 0.1);
-           backdrop-filter: blur(15px);
-           border-radius: 20px;
-           border: 1px solid rgba(255, 255, 255, 0.2);
-           box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37); }
-#deadline svg { width: 100%;
-               height: auto;
-               overflow: visible;
-               display: block;
-               filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
-               min-height: 120px; max-height: 200px; }
+#deadline {
+  width: 100%;
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  position: relative;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#deadline svg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  overflow: visible;
+  display: block;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+  min-height: 120px;
+  max-height: 200px;
+}
+
 /* Better mobile responsiveness for SVG */
-@media (max-width: 768px)
-{ #deadline svg { min-height: 80px;
-                 max-height: 120px;
-                }
-} @media (max-width: 480px) { #deadline svg { min-height: 60px; max-height: 100px; } } #death-group { visibility: visible; display: block; transform: translateX(100px); transition: transform 1s linear; will-change: transform; } #death-arm { transform-origin: top right; animation: swingArm 1s infinite ease-in-out; } @keyframes swingArm { 0% { transform: translateY(0); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0); } } #designer-arm-grop { animation: pulse 2s infinite ease-in-out; } @keyframes pulse { 0% { transform: translateY(0); } 50% { transform: translateY(-2px); } 100% { transform: translateY(0); } }
+@media (max-width: 768px) {
+  #deadline svg {
+    min-height: 80px;
+    max-height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  #deadline svg {
+    min-height: 60px;
+    max-height: 100px;
+  }
+}
+
+/* SVG Animation Elements */
+#death-group {
+  visibility: visible;
+  display: block;
+  transform: translateX(100px);
+  transition: transform 1s linear;
+  will-change: transform;
+}
+
+#death-arm {
+  transform-origin: top right;
+  animation: swingArm 1s infinite ease-in-out;
+}
+
+@keyframes swingArm {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
+}
+
+#designer-arm-grop {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
 .paused * {
   animation-play-state: paused !important;
   transition: none !important;
@@ -478,6 +528,12 @@ header h1 {
    RESPONSIVE DESIGN
 ============================== */
 
+/* Ensure deadline div is properly centered */
+#deadline {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Vertical monitor specific styles */
 @media (orientation: portrait) and (min-width: 768px) {
   #task-panel {
@@ -618,8 +674,10 @@ header h1 {
   }
 
   #deadline {
-    margin: 1rem;
-    padding: 1rem;
+    margin: 1rem auto;
+    padding: 1.5rem;
+    max-width: calc(100% - 2rem);
+    width: 100%;
   }
   
   #countDown {
@@ -724,7 +782,10 @@ header h1 {
   }
 
   #deadline {
-    padding: 0.5rem;
+    padding: 1rem;
+    margin: 0.5rem auto;
+    max-width: calc(100% - 1rem);
+    width: 100%;
   }
 
   #task-panel {
@@ -748,7 +809,7 @@ header h1 {
   }
 }
 
-/* Extra small devices */
+/* Extra small devices (improved centering and spacing) */
 @media (max-width: 320px) {
   header {
     padding: 0.6rem;
@@ -787,6 +848,28 @@ header h1 {
   #timer-buttons button {
     font-size: 0.9rem;
     padding: 0.8rem;
+  }
+
+  #deadline {
+    padding: 0.8rem;
+    margin: 0.3rem auto;
+    max-width: calc(100% - 0.6rem);
+  }
+}
+
+/* Medium devices - improve centering */
+@media (min-width: 768px) and (max-width: 1024px) {
+  #deadline {
+    margin: 2rem auto;
+    max-width: 90%;
+  }
+}
+
+/* Large screens - ensure proper centering */
+@media (min-width: 1025px) {
+  #deadline {
+    margin: 3rem auto;
+    max-width: 700px;
   }
 }
 
