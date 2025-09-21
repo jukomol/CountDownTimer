@@ -1,0 +1,15 @@
+# Test artifacts
+*.png
+*.jpg
+*.jpeg
+
+# Temporary files
+.DS_Store
+*~
+
+# Node modules if any
+node_modules/
+
+# Build artifacts
+dist/
+build/
