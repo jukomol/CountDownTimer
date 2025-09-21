@@ -17,7 +17,11 @@ body {
   color: #eee;
   transition: all 0.3s ease;
   min-height: 100vh;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;  /* take full height */
+  margin: 0;
 }
 
 /* Modern glassmorphism effect for containers */
@@ -768,6 +772,7 @@ header h1 {
     padding: 0.8rem;
   }
 }
+
 
 
 
